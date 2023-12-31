@@ -8,8 +8,9 @@ interface Props {
 	type: 'Register' | 'Login';
 	setType: React.Dispatch<React.SetStateAction<'Register' | 'Login'>>;
 }
+
 function RegisterOrLogin({ type, setType }: Props) {
-	const [username, setUserName] = useState('');
+	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
@@ -38,7 +39,7 @@ function RegisterOrLogin({ type, setType }: Props) {
 			<div className=" px-6 flex flex-col space-y-4 my-2">
 				<TextField
 					value={username}
-					onChange={(e) => setUserName(e.target.value)}
+					onChange={(e) => setUsername(e.target.value)}
 					label={type === 'Login' ? 'Username/Email' : 'Username'}
 					color="success"
 					required
