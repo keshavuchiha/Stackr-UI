@@ -1,6 +1,10 @@
 
 import { TextField } from '@mui/material'
+import axios from 'axios';
 import React ,{FormEvent, useState}from 'react'
+import { SERVER } from '../Contants/server';
+import Cookies from 'universal-cookie';
+
 interface Props {
     type :"Register"|"Login"
     setType:React.Dispatch<React.SetStateAction<"Register" | "Login">>
@@ -10,10 +14,21 @@ function RegisterOrLogin({type,setType}:Props) {
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [confirmPassword,setConfirmPassword]=useState("");
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    console.log("form sumbitted");
+    if(type==='Register'){
+      if(confirmPassword!==password){
+        alert("Password and confirm password not match");
+        return;
+      }
+    }
+    const res = await axios.post(`${SERVER}/v1/${type==="Register"?"register":"login"}`,{
+      username,
+      email,
+      password
+    })
+    const cookies = new Cookies();
+    cookies.set('token', res.headers.Authorization);
   }
   return (
     <form className='py-3' onSubmit={event=>handleSubmit(event)}>

@@ -27,22 +27,22 @@ function Header() {
             <div className="flex-grow my-auto">Search</div>
             <div className=' h-full flex text-center flex-row space-x-4'>
                 <div className="align-middle my-auto flex flex-row space-x-2">
-                    <div className=' cursor-pointer' onClick={()=>{
+                    <button className='' onClick={()=>{
                         setModalOpen(true);
                         setType("Register");
                     }}>
                         Register
-                    </div>
+                    </button>
                     <div>
                     or
                     </div>
                     
-                    <div className=' cursor-pointer' onClick={()=>{
+                    <button className='' onClick={()=>{
                         setModalOpen(true);
                         setType("Login");
                     }}>
                         Login
-                    </div>
+                    </button>
                 </div>
                 <button className="my-auto bg-green-200  text-green-800 rounded-md shadow-md px-2 py-1">
                     Premium
