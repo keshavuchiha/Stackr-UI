@@ -5,3 +5,16 @@
 	font-size: medium !important;
 	text-transform: capitalize !important;
 }
+
+.UserIcon {
+	font-size: 2rem !important;
+}
+
+.SettingsMenu {
+	width: 15rem !important;
+}
+
+.AuthDialogTitle {
+	@extend .Font-Family-Light;
+	font-size: xx-large !important;
+}
