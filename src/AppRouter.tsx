@@ -1,27 +1,32 @@
-import React, { createContext, useContext } from 'react';
-import './App.css';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Header from './components/Header/Header';
+import Home from './features/Home/Home';
+import './App.css';
+
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function App() {
 	const theme = useTheme();
 	const colorMode = useContext(ColorModeContext);
 	return (
-		<>
+		<BrowserRouter>
 			<Header
 				theme={theme.palette.mode}
 				toggleColorMode={colorMode.toggleColorMode}
 			/>
-			<Footer />
-		</>
+			<Routes>
+				<Route path="/" element={<Home />} />
+			</Routes>
+		</BrowserRouter>
 	);
 }
 
-export default function ToggleColorMode() {
-	const [mode, setMode] = React.useState<'light' | 'dark'>('light');
-	const colorMode = React.useMemo(
+function AppRouter() {
+	const [mode, setMode] = useState<'light' | 'dark'>('light');
+	const colorMode = useMemo(
 		() => ({
 			toggleColorMode: () => {
 				setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
@@ -30,7 +35,7 @@ export default function ToggleColorMode() {
 		[]
 	);
 
-	const theme = React.useMemo(
+	const theme = useMemo(
 		() =>
 			createTheme({
 				palette: {
@@ -48,3 +53,5 @@ export default function ToggleColorMode() {
 		</ColorModeContext.Provider>
 	);
 }
+
+export default AppRouter;

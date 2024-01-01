@@ -1,0 +1,89 @@
+@import '../../styles/App.scss';
+
+.PageWrapper {
+	height: 30%;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	border-radius: 0.5rem !important;
+	padding: 1.5rem;
+}
+
+.Header {
+	@extend .Font-Family-Medium;
+	font-size: 22px;
+	line-height: 28px;
+	text-align: center;
+	align-self: stretch;
+	padding-top: 18px;
+	padding-bottom: 4px;
+}
+
+.Caption {
+	@extend .Font-Family-Light;
+	line-height: 24px;
+	text-align: center;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+	.PageWrapper {
+		width: 70%;
+	}
+	.Caption {
+		font-size: 12px;
+	}
+	.Header {
+		font-size: 20px;
+	}
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+	.PageWrapper {
+		width: 50%;
+	}
+	.Caption {
+		font-size: 12px;
+	}
+	.Header {
+		font-size: 20px;
+	}
+}
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+	.PageWrapper {
+		width: 40%;
+	}
+	.Caption {
+		font-size: 14px;
+	}
+	.Header {
+		font-size: 22px;
+	}
+}
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+	.PageWrapper {
+		width: 30%;
+	}
+	.Caption {
+		font-size: 14px;
+	}
+	.Header {
+		font-size: 22px;
+	}
+}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+	.PageWrapper {
+		width: 30%;
+	}
+	.Caption {
+		font-size: 14px;
+	}
+	.Header {
+		font-size: 22px;
+	}
+}

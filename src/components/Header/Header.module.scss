@@ -1,0 +1,7 @@
+@import '../../styles/App.scss';
+
+.NavLinks {
+	@extend .Font-Medium;
+	font-size: medium !important;
+	text-transform: capitalize !important;
+}

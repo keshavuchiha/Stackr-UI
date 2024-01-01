@@ -18,10 +18,13 @@ import {
 	Brightness4,
 	Brightness7,
 } from '@mui/icons-material';
-import Logo from '../resources/logo.png';
-import styles from '../styles/App.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { navlinks } from '../../constants/navbar';
+import Logo from '../../resources/logo.png';
+import AppStyles from '../../styles/App.module.scss';
+import styles from './Header.module.scss';
+import clsx from 'clsx';
 
-const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 interface Props {
@@ -31,6 +34,7 @@ interface Props {
 
 function ResponsiveAppBar(props: Props) {
 	const { theme, toggleColorMode } = props;
+	const navigate = useNavigate();
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null
 	);
@@ -98,10 +102,16 @@ function ResponsiveAppBar(props: Props) {
 								display: { xs: 'block', md: 'none' },
 							}}
 						>
-							{pages.map((page) => (
-								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Typography className={styles.PrimaryText} textAlign="center">
-										{page}
+							{navlinks.map((navlink) => (
+								<MenuItem
+									key={navlink?.index?.toString()}
+									onClick={handleCloseNavMenu}
+								>
+									<Typography
+										className={clsx(theme === 'light' && AppStyles.PrimaryText)}
+										textAlign="center"
+									>
+										{navlink?.tabName}
 									</Typography>
 								</MenuItem>
 							))}
@@ -114,14 +124,17 @@ function ResponsiveAppBar(props: Props) {
 						<img className="w-52" src={Logo} alt="logo" />
 					</IconButton>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-						{pages.map((page) => (
+						{navlinks.map((navlink) => (
 							<Button
-								className={styles.PrimaryText}
-								key={page}
-								onClick={handleCloseNavMenu}
+								className={clsx(
+									theme === 'light' && AppStyles.PrimaryText,
+									styles.NavLinks
+								)}
+								key={navlink?.index?.toString()}
+								onClick={() => navigate('/abcd')}
 								sx={{ my: 2, display: 'block' }}
 							>
-								{page}
+								{navlink?.tabName}
 							</Button>
 						))}
 					</Box>
@@ -157,7 +170,12 @@ function ResponsiveAppBar(props: Props) {
 						>
 							{settings.map((setting) => (
 								<MenuItem key={setting} onClick={handleCloseUserMenu}>
-									<Typography textAlign="center">{setting}</Typography>
+									<Typography
+										className={clsx(theme === 'light' && AppStyles.PrimaryText)}
+										textAlign="center"
+									>
+										{setting}
+									</Typography>
 								</MenuItem>
 							))}
 						</Menu>
