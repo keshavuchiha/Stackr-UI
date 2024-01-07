@@ -100,6 +100,7 @@ function Header(props: Readonly<Props>) {
 	const dispatch = useDispatch();
 
 	const logoutUser = () => {
+		if (!isCookiePresent('token')) return;
 		removeCookie('token');
 		removeCookie('username');
 		dispatch(
