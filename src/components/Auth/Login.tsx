@@ -1,18 +1,26 @@
 import React from 'react';
 import { Button, PaletteMode, TextField } from '@mui/material';
-import axios from 'axios';
-import { SERVER } from '../../constants/auth';
-import Cookies from 'universal-cookie';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import clsx from 'clsx';
 import styles from '../Header/Header.module.scss';
+import { loginUser } from '../../store/actions/AuthActions';
+import {
+	setApplicationLoading,
+	setToastMessage,
+} from '../../store/reducers/ApplicationReducer';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
 	theme: PaletteMode;
+	closeDialog: () => void;
+	logoutUser: () => void;
 }
 
-function Login(props: Props) {
+function Login(props: Readonly<Props>) {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const textColor =
 		props.theme === 'light' ? 'text-[#1976D2]' : 'text-[#90CAF9]';
 	const formik = useFormik({
@@ -27,7 +35,26 @@ function Login(props: Props) {
 			Password: Yup.string().required('No password provided.'),
 		}),
 		onSubmit: (values) => {
-			console.log(JSON.stringify(values, null, 2));
+			props.logoutUser();
+			const body = {
+				email: values.Email,
+				password: values.Password,
+			};
+			props.closeDialog();
+			dispatch(setApplicationLoading(true));
+			loginUser(body)
+				.then((res) => {
+					if (res?.data?.data) {
+						dispatch(
+							setToastMessage({
+								toastMessage: 'Welcome back to Stackr.',
+								toastType: 'success',
+							})
+						);
+						navigate('/');
+					}
+				})
+				.finally(() => dispatch(setApplicationLoading(false)));
 		},
 	});
 
@@ -38,9 +65,10 @@ function Login(props: Props) {
 					fullWidth
 					id="Email"
 					label="Email"
+					type="email"
 					variant="standard"
 					{...formik.getFieldProps('Email')}
-					error={formik.touched.Email && formik.errors.Email ? true : false}
+					error={!!(formik.touched.Email && formik.errors.Email)}
 					helperText={
 						formik.touched.Email && formik.errors.Email
 							? formik.errors.Email
@@ -53,11 +81,10 @@ function Login(props: Props) {
 					fullWidth
 					id="Password"
 					label="Password"
+					type="password"
 					variant="standard"
 					{...formik.getFieldProps('Password')}
-					error={
-						formik.touched.Password && formik.errors.Password ? true : false
-					}
+					error={!!(formik.touched.Password && formik.errors.Password)}
 					helperText={
 						formik.touched.Password && formik.errors.Password
 							? formik.errors.Password

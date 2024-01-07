@@ -1,25 +1,31 @@
 export const navlinks = [
-	{ index: 1, tabName: 'Explore', location: '/', component: '-', icon: '-' },
+	{
+		index: 1,
+		tabName: 'Explore',
+		location: '/',
+		component: '-',
+		icon: 'ExploreOutlined',
+	},
 	{
 		index: 2,
 		tabName: 'Problems',
 		location: '/problems',
 		component: '-',
-		icon: '-',
+		icon: 'ListAltRounded',
 	},
 	{
 		index: 3,
 		tabName: 'Contest',
 		location: '/contest',
 		component: '-',
-		icon: '-',
+		icon: 'LeaderboardOutlined',
 	},
 	{
 		index: 4,
 		tabName: 'Discuss',
 		location: '/discuss',
 		component: '-',
-		icon: '-',
+		icon: 'MessageOutlined',
 	},
 ];
 
@@ -29,28 +35,28 @@ export const authenticatedSettings = [
 		tabName: 'Profile',
 		location: '/users',
 		component: '-',
-		icon: '-',
+		icon: 'AccountCircleOutlined',
 	},
 	{
 		index: 2,
 		tabName: 'Bookmarks',
 		location: '/users/bookmarks',
 		component: '-',
-		icon: '-',
+		icon: 'BookmarksOutlined',
 	},
 	{
 		index: 3,
 		tabName: 'Submissions',
 		location: '/users/submissions',
 		component: '-',
-		icon: '-',
+		icon: 'SaveOutlined',
 	},
 	{
 		index: 4,
 		tabName: 'Logout',
 		location: '-',
 		component: 'Logout',
-		icon: '-',
+		icon: 'ExitToApp',
 	},
 ];
 
@@ -75,3 +81,4 @@ export const SETTINGS = 'Settings';
 export const NAVBAR = 'Navbar';
 export const LOGIN = 'Login';
 export const REGISTER = 'Register';
+export const LOGOUT = 'Logout';

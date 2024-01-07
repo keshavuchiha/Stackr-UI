@@ -24,6 +24,9 @@ import {
 	AccountCircleOutlined,
 	Person,
 	PersonAdd,
+	ExitToApp,
+	BookmarksOutlined,
+	SaveOutlined,
 } from '@mui/icons-material';
 import Register from '../Auth/Register';
 import Login from '../Auth/Login';
@@ -35,11 +38,17 @@ import {
 	SETTINGS,
 	navlinks,
 	settings,
+	authenticatedSettings,
+	LOGOUT,
 } from '../../constants/navbar';
 import Logo from '../../resources/logo.png';
 import AppStyles from '../../styles/App.module.scss';
 import styles from './Header.module.scss';
 import clsx from 'clsx';
+import { isCookiePresent, removeCookie } from '../../utils/auth';
+import { setToastMessage } from '../../store/reducers/ApplicationReducer';
+import { useDispatch } from 'react-redux';
+import NavbarDrawer from './NavbarDrawer';
 
 const renderSettingsIcon = (iconName: string) => {
 	switch (iconName) {
@@ -47,6 +56,14 @@ const renderSettingsIcon = (iconName: string) => {
 			return <Person />;
 		case 'PersonAdd':
 			return <PersonAdd />;
+		case 'ExitToApp':
+			return <ExitToApp />;
+		case 'AccountCircleOutlined':
+			return <AccountCircleOutlined />;
+		case 'BookmarksOutlined':
+			return <BookmarksOutlined />;
+		case 'SaveOutlined':
+			return <SaveOutlined />;
 		default:
 			return null;
 	}
@@ -70,10 +87,10 @@ interface AuthMenuProps {
 	type: 'Login' | 'Register';
 }
 
-function Header(props: Props) {
+function Header(props: Readonly<Props>) {
 	const { theme, toggleColorMode } = props;
 	const navigate = useNavigate();
-	const [navbarAnchor, setNavbarAnchor] = useState<null | HTMLElement>(null);
+	const [navbarAnchor, setNavbarAnchor] = useState<boolean>(false);
 	const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(
 		null
 	);
@@ -81,12 +98,26 @@ function Header(props: Props) {
 		enabled: false,
 		type: LOGIN,
 	});
+	const dispatch = useDispatch();
+
+	const logoutUser = () => {
+		removeCookie('token');
+		removeCookie('username');
+		dispatch(
+			setToastMessage({
+				toastMessage: 'You have successfully logged out',
+				toastType: 'success',
+			})
+		);
+	};
 
 	const renderComponent = (component: string) => {
 		switch (component) {
 			case LOGIN:
 			case REGISTER:
 				return setAuth({ enabled: true, type: component });
+			case LOGOUT:
+				return logoutUser();
 			default:
 				return;
 		}
@@ -97,18 +128,25 @@ function Header(props: Props) {
 		event: React.MouseEvent<HTMLElement>
 	) => {
 		if (menuName === SETTINGS) setSettingsAnchor(event.currentTarget);
-		else setNavbarAnchor(event.currentTarget);
+		else setNavbarAnchor(true);
 	};
 
 	const closeMenu = (menuName: string) => {
 		if (menuName === SETTINGS) setSettingsAnchor(null);
-		else setNavbarAnchor(null);
+		else setNavbarAnchor(false);
 	};
 
 	const handleSettingsMenuClick = (props: SettingItemProps) => {
-		renderComponent(props.component);
 		closeMenu(SETTINGS);
+		renderComponent(props.component);
 	};
+
+	const handleAuthModalClose = () => {
+		setAuth({ ...auth, enabled: false });
+	};
+
+	const getNavbarSettingsArray = () =>
+		isCookiePresent('token') ? authenticatedSettings : settings;
 
 	return (
 		<>
@@ -139,40 +177,7 @@ function Header(props: Props) {
 							>
 								<MenuIcon />
 							</IconButton>
-							<Menu
-								id="menu-appbar"
-								anchorEl={navbarAnchor}
-								anchorOrigin={{
-									vertical: 'bottom',
-									horizontal: 'left',
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: 'top',
-									horizontal: 'left',
-								}}
-								open={Boolean(navbarAnchor)}
-								onClose={() => closeMenu(NAVBAR)}
-								sx={{
-									display: { xs: 'block', md: 'none' },
-								}}
-							>
-								{navlinks.map((navlink) => (
-									<MenuItem
-										key={navlink?.index?.toString()}
-										onClick={() => closeMenu(NAVBAR)}
-									>
-										<Typography
-											className={clsx(
-												theme === 'light' && AppStyles.PrimaryText
-											)}
-											textAlign="center"
-										>
-											{navlink?.tabName}
-										</Typography>
-									</MenuItem>
-								))}
-							</Menu>
+							<NavbarDrawer open={navbarAnchor} setOpen={setNavbarAnchor} />
 						</Box>
 						<IconButton
 							sx={{ display: { xs: 'flex', md: 'none' } }}
@@ -224,7 +229,7 @@ function Header(props: Props) {
 								open={Boolean(settingsAnchor)}
 								onClose={() => closeMenu(SETTINGS)}
 							>
-								{settings.map((setting) => (
+								{getNavbarSettingsArray().map((setting) => (
 									<MenuItem
 										className={styles.SettingsMenu}
 										key={setting?.index?.toString()}
@@ -256,16 +261,24 @@ function Header(props: Props) {
 				fullWidth
 				maxWidth="sm"
 				open={auth.enabled}
-				onClose={() => setAuth({ ...auth, enabled: false })}
+				onClose={handleAuthModalClose}
 			>
 				<DialogTitle className={clsx('text-center', styles.AuthDialogTitle)}>
 					{auth.type}
 				</DialogTitle>
 				<DialogContent>
 					{auth.type === LOGIN ? (
-						<Login theme={theme} />
+						<Login
+							theme={theme}
+							closeDialog={handleAuthModalClose}
+							logoutUser={logoutUser}
+						/>
 					) : (
-						<Register theme={theme} />
+						<Register
+							theme={theme}
+							closeDialog={handleAuthModalClose}
+							logoutUser={logoutUser}
+						/>
 					)}
 				</DialogContent>
 			</Dialog>
